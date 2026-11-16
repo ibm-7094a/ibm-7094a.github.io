@@ -1,14 +1,262 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>October 2026</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 40px 20px;
+    background: #242424;
+    color: #f3f0e9;
+    font-family: Arial, sans-serif;
+  }
+
+  .calendar {
+    max-width: 1100px;
+    margin: auto;
+  }
+
+  header {
+    margin-bottom: 30px;
+  }
+
+  h1 {
+    font-size: 42px;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: 3px;
+  }
+
+  .year {
+    color: #aaa;
+    margin-top: 8px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+
+  .weekday {
+    text-align: center;
+    padding: 12px 0;
+    color: #aaa;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  .day {
+    min-width: 0;
+    min-height: 110px;
+    position: relative;
+    overflow: hidden;
+    background-color: #393939;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid #484848;
+    color: white;
+    text-align: left;
+    padding: 12px;
+    font-size: 17px;
+    cursor: pointer;
+    transition: filter 0.2s;
+  }
+
+  .day:hover {
+    filter: brightness(1.2);
+  }
+
+  .day::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.45),
+      transparent 65%
+    );
+    pointer-events: none;
+  }
+
+  .day span {
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.8);
+  }
+
+  .empty {
+    background: transparent;
+    border: none;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 10;
+  }
+
+  .overlay.active {
+    display: flex;
+  }
+
+  .popup {
+    background: #303030;
+    padding: 35px;
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid #555;
+  }
+
+  .popup h2 {
+    font-weight: 400;
+  }
+
+  .close {
+    background: none;
+    color: white;
+    border: 1px solid #777;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 600px) {
+    body {
+      padding: 20px 8px;
+    }
+
+    h1 {
+      font-size: 30px;
+    }
+
+    .grid {
+      gap: 2px;
+    }
+
+    .day {
+      min-height: 65px;
+      padding: 6px;
+      font-size: 14px;
+    }
+
+    .weekday {
+      font-size: 9px;
+    }
+  }
+</style>
+</head>
+
 <body>
 
-<h1>Hello World</h1>
-<h2>Girl help i havent used this since like middle school</h2>
-<h3>Yo github pls publish my site bro</h3>
+<div class="calendar">
 
-<!-- putting random filler boom: -->
+  <header>
+    <h1>OCTOBER</h1>
+    <div class="year">2026</div>
+  </header>
 
-<p>Lorem ipsum or whatever people say</p>
+  <div class="grid" id="calendar">
+
+    <div class="weekday">SUN</div>
+    <div class="weekday">MON</div>
+    <div class="weekday">TUE</div>
+    <div class="weekday">WED</div>
+    <div class="weekday">THU</div>
+    <div class="weekday">FRI</div>
+    <div class="weekday">SAT</div>
+
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="popup">
+    <h2 id="selectedDate"></h2>
+    <p>Your experience for this day will go here.</p>
+    <button class="close" onclick="closePopup()">CLOSE</button>
+  </div>
+</div>
+
+<script>
+
+  const calendar = document.getElementById("calendar");
+
+  // set oct 1 as thursday
+  const firstDay = 4;
+  const daysInMonth = 31;
+
+  // alignment check
+  for (let i = 0; i < firstDay; i++) {
+    const empty = document.createElement("div");
+    empty.className = "day empty";
+    calendar.appendChild(empty);
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+
+    const cell = document.createElement("button");
+    cell.className = "day";
+
+    const number = document.createElement("span");
+    number.textContent = day;
+    cell.appendChild(number);
+
+    // foto graff selection
+    const imageName = `day-${String(day).padStart(2, '0')}.jpg`;
+
+    cell.style.backgroundImage =
+      `url('images/${imageName}')`;
+
+    cell.onclick = () => openPopup(day);
+
+    calendar.appendChild(cell);
+  }
+
+  function openPopup(day) {
+
+    document.getElementById("selectedDate").textContent =
+      `October ${day}, 2026`;
+
+    document.getElementById("overlay").classList.add("active");
+  }
+
+  function closePopup() {
+
+    document.getElementById("overlay").classList.remove("active");
+  }
+
+  document.getElementById("overlay").addEventListener("click", (event) => {
+
+    if (event.target.id === "overlay") {
+      closePopup();
+    }
+
+  });
+
+  document.addEventListener("keydown", (event) => {
+
+    if (event.key === "Escape") {
+      closePopup();
+    }
+
+  });
+
+</script>
 
 </body>
 </html>
