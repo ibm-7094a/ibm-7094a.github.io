@@ -1,6 +1,164 @@
+
 <!DOCTYPE html>
 <html lang="en">
-    <h1>add posts stuff here</h1>
-    <h2>better get you some volunteers son</h2>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contribute | October 2026</title>
 
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 40px 20px 90px;
+    background: #242424;
+    color: #f3f0e9;
+    font-family: Arial, sans-serif;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: auto;
+  }
+
+  header {
+    margin-bottom: 40px;
+  }
+
+  h1 {
+    font-size: 42px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    margin: 0;
+  }
+
+  .subtitle {
+    color: #aaa;
+    margin-top: 10px;
+    font-size: 15px;
+    letter-spacing: 1px;
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: 35px;
+    color: #aaa;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+  }
+
+  .back:hover {
+    color: #f3f0e9;
+  }
+
+  .comments-section {
+    background: #303030;
+    border: 1px solid #484848;
+    padding: 30px;
+  }
+
+  .comments-section h2 {
+    font-size: 22px;
+    font-weight: 400;
+    margin-top: 0;
+    letter-spacing: 1px;
+  }
+
+  .comments-section p {
+    color: #aaa;
+    line-height: 1.6;
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+
+  #disqus_thread {
+    color-scheme: light;
+  }
+
+  footer {
+    margin-top: 35px;
+    color: #777;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    body {
+      padding: 20px 12px 80px;
+    }
+
+    h1 {
+      font-size: 30px;
+    }
+
+    .comments-section {
+      padding: 18px;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <a href="index.html" class="back">&larr; BACK TO CALENDAR</a>
+
+  <header>
+    <h1>CONTRIBUTE</h1>
+    <div class="subtitle">OCTOBER 2026</div>
+  </header>
+
+  <div class="comments-section">
+
+    <h2>ADD POSTS STUFF HERE</h2>
+
+    <p>
+      Better get you some volunteers, son.
+      Have an idea, a photo, or something you'd like
+      to contribute to the project? Leave a comment below.
+    </p>
+
+    <div id="disqus_thread"></div>
+
+  </div>
+
+  <footer>
+    OCTOBER 2026
+  </footer>
+
+</div>
+
+<script>
+  var disqus_config = function () {
+    this.page.url = window.location.href;
+    this.page.identifier = 'october-2026-contribute';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://school-project-bia.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+
+<noscript>
+  Please enable JavaScript to view the
+  <a href="https://disqus.com/?ref_noscript">
+    comments powered by Disqus.
+  </a>
+</noscript>
+
+<script id="dsq-count-scr"
+src="//school-project-bia.disqus.com/count.js"
+async></script>
+
+</body>
 </html>
