@@ -6,7 +6,7 @@
 <title>October 2026</title>
 
 <style>
-  * {
+  *, *::before, *::after {
     box-sizing: border-box;
   }
 
@@ -21,6 +21,94 @@
   .calendar {
     max-width: 1100px;
     margin: auto;
+  }
+
+  /* Top Color-Matched Tabs */
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #484848;
+    padding-bottom: 10px;
+  }
+
+  .tab-btn {
+    background: #303030;
+    color: #aaa;
+    border: 1px solid #484848;
+    padding: 8px 16px;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: lowercase;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .tab-btn:hover {
+    background: #393939;
+    color: #f3f0e9;
+    border-color: #666;
+  }
+
+  .tab-btn.active {
+    background: #393939;
+    color: #f3f0e9;
+    border-color: #f3f0e9;
+  }
+
+  .tab-panel {
+    display: none;
+    background: #303030;
+    border: 1px solid #484848;
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+
+  .tab-panel h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #f3f0e9;
+  }
+
+  .tab-panel p {
+    margin: 0 0 14px;
+    color: #d4d0c8;
+    line-height: 1.6;
+    font-size: 14px;
+  }
+
+  .tab-panel p:last-child {
+    margin-bottom: 0;
+  }
+
+  .panel-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .panel-btn {
+    background: #242424;
+    color: #f3f0e9;
+    border: 1px solid #555;
+    padding: 8px 14px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .panel-btn:hover {
+    background: #393939;
+    border-color: #888;
   }
 
   header {
@@ -162,6 +250,15 @@
       padding: 20px 8px 80px;
     }
 
+    .tab-btn {
+      padding: 7px 12px;
+      font-size: 12px;
+    }
+
+    .tab-panel {
+      padding: 16px;
+    }
+
     h1 {
       font-size: 30px;
     }
@@ -193,6 +290,47 @@
 <body>
 
 <div class="calendar">
+
+  <nav class="tabs" aria-label="Site sections">
+    <button type="button" class="tab-btn" data-tab="about" onclick="toggleTab('about')">about</button>
+    <button type="button" class="tab-btn" data-tab="project" onclick="toggleTab('project')">project</button>
+    <button type="button" class="tab-btn" data-tab="posts" onclick="toggleTab('posts')">posts</button>
+    <button type="button" class="tab-btn" data-tab="share" onclick="toggleTab('share')">share</button>
+  </nav>
+
+  <section id="panel-about" class="tab-panel" aria-label="About">
+    <h2>about</h2>
+    <p>A visual archive for October 2026 — click any day on the calendar to open its daily video and photo frame.</p>
+    <div class="panel-actions">
+      <button type="button" class="panel-btn" onclick="closeTabs()">hide panel</button>
+    </div>
+  </section>
+
+  <section id="panel-project" class="tab-panel" aria-label="Project">
+    <h2>project</h2>
+    <p>Each day pairs an image from <code>images/day-01.jpg</code> through <code>images/day-31.jpg</code> with a daily video entry.</p>
+    <div class="panel-actions">
+      <a href="addme.html" class="panel-btn">contribute to the project</a>
+      <button type="button" class="panel-btn" onclick="closeTabs()">hide panel</button>
+    </div>
+  </section>
+
+  <section id="panel-posts" class="tab-panel" aria-label="Posts">
+    <h2>posts</h2>
+    <p>Notes, dispatches, and daily highlights from October 2026 will appear here as entries are published.</p>
+    <div class="panel-actions">
+      <button type="button" class="panel-btn" onclick="closeTabs()">hide panel</button>
+    </div>
+  </section>
+
+  <section id="panel-share" class="tab-panel" aria-label="Share">
+    <h2>share</h2>
+    <p id="shareStatus">Copy the link below to share October 2026.</p>
+    <div class="panel-actions">
+      <button type="button" class="panel-btn" onclick="copyPageLink()">copy link</button>
+      <button type="button" class="panel-btn" onclick="closeTabs()">hide panel</button>
+    </div>
+  </section>
 
   <header>
     <h1>OCTOBER</h1>
@@ -257,6 +395,43 @@
     calendar.appendChild(cell);
   }
 
+  function toggleTab(tabName) {
+    const buttons = document.querySelectorAll(".tab-btn");
+    const panels = document.querySelectorAll(".tab-panel");
+    const targetPanel = document.getElementById(`panel-${tabName}`);
+    const isAlreadyActive = targetPanel.classList.contains("active");
+
+    buttons.forEach(btn => btn.classList.remove("active"));
+    panels.forEach(panel => panel.classList.remove("active"));
+
+    if (!isAlreadyActive) {
+      document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add("active");
+      targetPanel.classList.add("active");
+      if (tabName === "share") {
+        copyPageLink();
+      }
+    }
+  }
+
+  function closeTabs() {
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.remove("active"));
+  }
+
+  function copyPageLink() {
+    const status = document.getElementById("shareStatus");
+    const url = window.location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        status.textContent = `Copied link: ${url}`;
+      }).catch(() => {
+        status.textContent = `Share URL: ${url}`;
+      });
+    } else {
+      status.textContent = `Share URL: ${url}`;
+    }
+  }
+
   function openPopup(day) {
 
     document.getElementById("selectedDate").textContent =
@@ -282,6 +457,7 @@
 
     if (event.key === "Escape") {
       closePopup();
+      closeTabs();
     }
 
   });
