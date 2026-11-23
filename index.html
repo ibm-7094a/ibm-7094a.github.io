@@ -34,6 +34,8 @@
   }
 
   .tab-btn {
+    display: inline-block;
+    text-decoration: none;
     background: #303030;
     color: #aaa;
     border: 1px solid #484848;
@@ -55,60 +57,6 @@
     background: #393939;
     color: #f3f0e9;
     border-color: #f3f0e9;
-  }
-
-  .tab-panel {
-    display: none;
-    background: #303030;
-    border: 1px solid #484848;
-    padding: 24px;
-    margin-bottom: 28px;
-  }
-
-  .tab-panel.active {
-    display: block;
-  }
-
-  .tab-panel h2 {
-    margin: 0 0 10px;
-    font-size: 18px;
-    font-weight: 400;
-    letter-spacing: 1px;
-    color: #f3f0e9;
-  }
-
-  .tab-panel p {
-    margin: 0 0 14px;
-    color: #d4d0c8;
-    line-height: 1.6;
-    font-size: 14px;
-  }
-
-  .tab-panel p:last-child {
-    margin-bottom: 0;
-  }
-
-  .panel-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 14px;
-  }
-
-  .panel-btn {
-    background: #242424;
-    color: #f3f0e9;
-    border: 1px solid #555;
-    padding: 8px 14px;
-    font-size: 12px;
-    letter-spacing: 1px;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .panel-btn:hover {
-    background: #393939;
-    border-color: #888;
   }
 
   header {
@@ -255,10 +203,6 @@
       font-size: 12px;
     }
 
-    .tab-panel {
-      padding: 16px;
-    }
-
     h1 {
       font-size: 30px;
     }
@@ -292,45 +236,11 @@
 <div class="calendar">
 
   <nav class="tabs" aria-label="Site sections">
-    <button type="button" class="tab-btn" data-tab="about" onclick="toggleTab('about')">about</button>
-    <button type="button" class="tab-btn" data-tab="project" onclick="toggleTab('project')">project</button>
-    <button type="button" class="tab-btn" data-tab="posts" onclick="toggleTab('posts')">posts</button>
-    <button type="button" class="tab-btn" data-tab="share" onclick="toggleTab('share')">share</button>
+    <a href="about.html" class="tab-btn">about</a>
+    <a href="project.html" class="tab-btn">project</a>
+    <a href="posts.html" class="tab-btn">posts</a>
+    <a href="share.html" class="tab-btn">share</a>
   </nav>
-
-  <section id="panel-about" class="tab-panel" aria-label="About">
-    <h2>about</h2>
-    <p>A visual archive for October 2026 — click any day on the calendar to open its daily video and photo frame.</p>
-    <div class="panel-actions">
-      <button type="button" class="panel-btn" onclick="closeTabs()">hide panel</button>
-    </div>
-  </section>
-
-  <section id="panel-project" class="tab-panel" aria-label="Project">
-    <h2>project</h2>
-    <p>Each day pairs an image from <code>images/day-01.jpg</code> through <code>images/day-31.jpg</code> with a daily video entry.</p>
-    <div class="panel-actions">
-      <a href="addme.html" class="panel-btn">contribute to the project</a>
-      <button type="button" class="panel-btn" onclick="closeTabs()">hide panel</button>
-    </div>
-  </section>
-
-  <section id="panel-posts" class="tab-panel" aria-label="Posts">
-    <h2>posts</h2>
-    <p>Notes, dispatches, and daily highlights from October 2026 will appear here as entries are published.</p>
-    <div class="panel-actions">
-      <button type="button" class="panel-btn" onclick="closeTabs()">hide panel</button>
-    </div>
-  </section>
-
-  <section id="panel-share" class="tab-panel" aria-label="Share">
-    <h2>share</h2>
-    <p id="shareStatus">Copy the link below to share October 2026.</p>
-    <div class="panel-actions">
-      <button type="button" class="panel-btn" onclick="copyPageLink()">copy link</button>
-      <button type="button" class="panel-btn" onclick="closeTabs()">hide panel</button>
-    </div>
-  </section>
 
   <header>
     <h1>OCTOBER</h1>
@@ -395,41 +305,343 @@
     calendar.appendChild(cell);
   }
 
-  function toggleTab(tabName) {
-    const buttons = document.querySelectorAll(".tab-btn");
-    const panels = document.querySelectorAll(".tab-panel");
-    const targetPanel = document.getElementById(`panel-${tabName}`);
-    const isAlreadyActive = targetPanel.classList.contains("active");
+  function openPopup(day) {
 
-    buttons.forEach(btn => btn.classList.remove("active"));
-    panels.forEach(panel => panel.classList.remove("active"));
+    document.getElementById("selectedDate").textContent =
+      `October ${day}, 2026`;
 
-    if (!isAlreadyActive) {
-      document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add("active");
-      targetPanel.classList.add("active");
-      if (tabName === "share") {
-        copyPageLink();
-      }
-    }
+    document.getElementById("overlay").classList.add("active");
   }
 
-  function closeTabs() {
-    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-    document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.remove("active"));
+  function closePopup() {
+
+    document.getElementById("overlay").classList.remove("active");
   }
 
-  function copyPageLink() {
-    const status = document.getElementById("shareStatus");
-    const url = window.location.href;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(() => {
-        status.textContent = `Copied link: ${url}`;
-      }).catch(() => {
-        status.textContent = `Share URL: ${url}`;
-      });
-    } else {
-      status.textContent = `Share URL: ${url}`;
+  document.getElementById("overlay").addEventListener("click", (event) => {
+
+    if (event.target.id === "overlay") {
+      closePopup();
     }
+
+  });
+
+  document.addEventListener("keydown", (event) => {
+
+    if (event.key === "Escape") {
+      closePopup();
+    }
+
+  });
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>October 2026</title>
+
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 40px 20px 90px; /* Added extra bottom padding so button doesn't cover bottom-right cell */
+    background: #242424;
+    color: #f3f0e9;
+    font-family: Arial, sans-serif;
+  }
+
+  .calendar {
+    max-width: 1100px;
+    margin: auto;
+  }
+
+  /* Top Color-Matched Tabs */
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #484848;
+    padding-bottom: 10px;
+  }
+
+  .tab-btn {
+    display: inline-block;
+    text-decoration: none;
+    background: #303030;
+    color: #aaa;
+    border: 1px solid #484848;
+    padding: 8px 16px;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: lowercase;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .tab-btn:hover {
+    background: #393939;
+    color: #f3f0e9;
+    border-color: #666;
+  }
+
+  .tab-btn.active {
+    background: #393939;
+    color: #f3f0e9;
+    border-color: #f3f0e9;
+  }
+
+  header {
+    margin-bottom: 30px;
+  }
+
+  h1 {
+    font-size: 42px;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: 3px;
+  }
+
+  .year {
+    color: #aaa;
+    margin-top: 8px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+
+  .weekday {
+    text-align: center;
+    padding: 12px 0;
+    color: #aaa;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  .day {
+    min-width: 0;
+    min-height: 110px;
+    position: relative;
+    overflow: hidden;
+    background-color: #393939;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid #484848;
+    color: white;
+    text-align: left;
+    padding: 12px;
+    font-size: 17px;
+    cursor: pointer;
+    transition: filter 0.2s;
+  }
+
+  .day:hover {
+    filter: brightness(1.2);
+  }
+
+  .day::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.45),
+      transparent 65%
+    );
+    pointer-events: none;
+  }
+
+  .day span {
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.8);
+  }
+
+  .empty {
+    background: transparent;
+    border: none;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 10;
+  }
+
+  .overlay.active {
+    display: flex;
+  }
+
+  .popup {
+    background: #303030;
+    padding: 35px;
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid #555;
+  }
+
+  .popup h2 {
+    font-weight: 400;
+  }
+
+  .close {
+    background: none;
+    color: white;
+    border: 1px solid #777;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+
+  /* Floating Contribute Button */
+  .contribute-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #303030;
+    color: #f3f0e9;
+    border: 1px solid #555;
+    padding: 12px 20px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s, border-color 0.2s;
+    z-index: 5; /* Sits above calendar cells, but beneath the modal overlay (z-index: 10) */
+  }
+
+  .contribute-btn:hover {
+    background: #3d3d3d;
+    border-color: #888;
+  }
+
+  @media (max-width: 600px) {
+    body {
+      padding: 20px 8px 80px;
+    }
+
+    .tab-btn {
+      padding: 7px 12px;
+      font-size: 12px;
+    }
+
+    h1 {
+      font-size: 30px;
+    }
+
+    .grid {
+      gap: 2px;
+    }
+
+    .day {
+      min-height: 65px;
+      padding: 6px;
+      font-size: 14px;
+    }
+
+    .weekday {
+      font-size: 9px;
+    }
+
+    .contribute-btn {
+      bottom: 16px;
+      right: 16px;
+      padding: 10px 14px;
+      font-size: 12px;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="calendar">
+
+  <nav class="tabs" aria-label="Site sections">
+    <a href="about.html" class="tab-btn">about</a>
+    <a href="project.html" class="tab-btn">project</a>
+    <a href="posts.html" class="tab-btn">posts</a>
+    <a href="share.html" class="tab-btn">share</a>
+  </nav>
+
+  <header>
+    <h1>OCTOBER</h1>
+    <div class="year">2026</div>
+  </header>
+
+  <div class="grid" id="calendar">
+
+    <div class="weekday">SUNDAY</div>
+    <div class="weekday">MONDAY</div>
+    <div class="weekday">TUESDAY</div>
+    <div class="weekday">WEDNESDAY</div>
+    <div class="weekday">THURSDAY</div>
+    <div class="weekday">FRIDAY</div>
+    <div class="weekday">SATURDAY</div>
+
+  </div>
+</div>
+
+<a href="addme.html" class="contribute-btn">contribute to the project</a>
+
+<div class="overlay" id="overlay">
+  <div class="popup">
+    <h2 id="selectedDate"></h2>
+    <p>video of the day goes here</p>
+    <button class="close" onclick="closePopup()">CLOSE</button>
+  </div>
+</div>
+
+<script>
+
+  const calendar = document.getElementById("calendar");
+
+  // set oct 1 as thursday
+  const firstDay = 4;
+  const daysInMonth = 31;
+
+  // alignment check
+  for (let i = 0; i < firstDay; i++) {
+    const empty = document.createElement("div");
+    empty.className = "day empty";
+    calendar.appendChild(empty);
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+
+    const cell = document.createElement("button");
+    cell.className = "day";
+
+    const number = document.createElement("span");
+    number.textContent = day;
+    cell.appendChild(number);
+
+    // foto graff selection
+    const imageName = `day-${String(day).padStart(2, '0')}.jpg`;
+
+    cell.style.backgroundImage =
+      `url('images/${imageName}')`;
+
+    cell.onclick = () => openPopup(day);
+
+    calendar.appendChild(cell);
   }
 
   function openPopup(day) {
@@ -457,7 +669,6 @@
 
     if (event.key === "Escape") {
       closePopup();
-      closeTabs();
     }
 
   });
